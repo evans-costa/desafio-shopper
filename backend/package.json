@@ -5,18 +5,26 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsup src --format esm",
-    "start": "node dist/server.mjs"
+    "start": "node dist/server.mjs",
+    "lint:prettier:check": "prettier . --check",
+    "lint:prettier:fix": "prettier . --write",
+    "lint:eslint:check": "eslint ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@eslint/js": "^9.15.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.9.1",
+    "eslint": "^9.15.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "3.3.3",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.15.0"
   },
   "dependencies": {
     "fastify": "^5.1.0"

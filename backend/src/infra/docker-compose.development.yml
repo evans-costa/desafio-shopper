@@ -1,0 +1,8 @@
+name: test-shopper-dev
+services:
+  db:
+    container_name: "postgres-db"
+    image: "postgres:16-alpine"
+    env_file: ../../.env.development
+    ports:
+      - "5432:5432"

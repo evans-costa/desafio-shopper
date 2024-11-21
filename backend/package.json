@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "npm run services:dev:up && tsx watch src/server.ts",
     "build": "tsup src --format esm",
     "start": "node dist/server.mjs",
+    "services:dev:up": "docker compose -f src/infra/docker-compose.development.yml up -d",
     "lint:prettier:check": "prettier . --check",
     "lint:prettier:fix": "prettier . --write",
     "lint:eslint:check": "eslint ."
@@ -27,6 +28,8 @@
     "typescript-eslint": "^8.15.0"
   },
   "dependencies": {
-    "fastify": "^5.1.0"
+    "@types/pg": "^8.11.10",
+    "fastify": "^5.1.0",
+    "pg": "^8.13.1"
   }
 }

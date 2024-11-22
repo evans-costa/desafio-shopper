@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run services:dev:up && tsx watch src/server.ts",
+    "dev": "npm run services:dev:up && npm run migrations:seed && tsx watch --env-file=../.env --env-file=./.env.development src/server.ts",
     "build": "tsup src --format esm",
-    "start": "node dist/server.mjs",
-    "services:dev:up": "docker compose -f src/infra/docker-compose.development.yml up -d",
+    "start": "node --env-file=.env.development dist/infra/scripts/seedDatabase.mjs && node --env-file=../.env dist/server.mjs",
+    "services:dev:up": "docker compose -f docker-compose.development.yml up -d",
     "migrations:create": "node-pg-migrate --migrations-dir src/infra/migrations create",
     "migrations:up": "node-pg-migrate -m src/infra/migrations --envPath .env.development up",
+    "migrations:seed": "tsx --env-file=.env.development src/infra/scripts/seedDatabase.ts",
     "lint:prettier:check": "prettier . --check",
     "lint:prettier:fix": "prettier . --write",
     "lint:eslint:check": "eslint ."
@@ -20,9 +21,11 @@
   "devDependencies": {
     "@eslint/js": "^9.15.0",
     "@tsconfig/node20": "^20.1.4",
+    "@types/google.maps": "^3.58.1",
     "@types/node": "^22.9.1",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
+    "fastify-type-provider-zod": "^4.0.2",
     "prettier": "3.3.3",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
@@ -35,6 +38,7 @@
     "dotenv-expand": "^12.0.1",
     "fastify": "^5.1.0",
     "node-pg-migrate": "^7.8.0",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "zod": "^3.23.8"
   }
 }

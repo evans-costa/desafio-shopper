@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Client, QueryResult } from "pg";
+import pg from "pg";
 
 type QueryObject =
   | string
@@ -8,8 +8,8 @@ type QueryObject =
       values?: any[];
     };
 
-async function query(queryObject: QueryObject): Promise<QueryResult<any>> {
-  let client: Client | null = null;
+async function query(queryObject: QueryObject): Promise<pg.QueryResult<any>> {
+  let client: pg.Client | null = null;
 
   try {
     client = await getNewClient();
@@ -23,8 +23,8 @@ async function query(queryObject: QueryObject): Promise<QueryResult<any>> {
   }
 }
 
-async function getNewClient(): Promise<Client> {
-  const client = new Client({
+async function getNewClient(): Promise<pg.Client> {
+  const client = new pg.Client({
     host: process.env.POSTGRES_HOST,
     port: parseInt(process.env.POSTGRES_PORT || "5432"),
     user: process.env.POSTGRES_USER,

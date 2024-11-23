@@ -6,7 +6,6 @@ type FastifyErrorHandler = FastifyInstance["errorHandler"];
 
 export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
   if (hasZodFastifySchemaValidationErrors(error)) {
-    console.error(error);
     return reply.status(400).send({
       error_code: "INVALID_DATA",
       error_description:
@@ -35,6 +34,5 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
     });
   }
 
-  console.error(error);
   return reply.status(500).send({ message: "Internal Server Error" });
 };

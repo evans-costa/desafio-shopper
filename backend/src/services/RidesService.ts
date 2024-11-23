@@ -2,6 +2,7 @@ import { BadRequest, NotAcceptable, NotFound } from "../_errors";
 import { fetchDirections } from "../lib/fetchGoogleMaps";
 import { DriversRepository } from "../repositories/DriversRepository";
 import { RidesRepository } from "../repositories/RidesRepository";
+import { metersToKm } from "../utils/metersToKm";
 
 export class RidesService {
   private ridesRepository: RidesRepository;
@@ -13,13 +14,20 @@ export class RidesService {
   }
 
   async estimateRide(origin: string, destination: string) {
-    const directions = await fetchDirections(origin, destination);
+    const formatOrigin = origin.toLocaleLowerCase();
+    const formatDestination = destination.toLocaleLowerCase();
+
+    const directions = await fetchDirections(formatOrigin, formatDestination);
+
+    if (directions.routes.length === 0) {
+      throw new BadRequest("INVALID_DATA", "Endereço não encontrado.");
+    }
 
     const startLocation = directions.routes[0].legs[0].start_location;
     const endLocation = directions.routes[0].legs[0].end_location;
     const duration = directions.routes[0].legs[0].duration?.text as string;
     const distance = parseFloat(
-      (directions.routes[0].legs[0].distance?.text as string).split(" ")[0],
+      metersToKm(directions.routes[0].legs[0].distance?.text as string),
     ); // get numeric value
 
     const drivers = await this.driversRepository.getDriversByDistance(distance);

@@ -3,8 +3,14 @@ import z from "zod";
 export const estimateRideRequestSchema = z
   .object({
     customer_id: z.string().min(1),
-    origin: z.string().min(1),
-    destination: z.string().min(1),
+    origin: z
+      .string()
+      .min(1)
+      .transform((value) => value.toLocaleLowerCase().replaceAll(" ", "")),
+    destination: z
+      .string()
+      .min(1)
+      .transform((value) => value.toLocaleLowerCase().replaceAll(" ", "")),
   })
   .refine((data) => data.origin !== data.destination, {
     message: "Origin and destination must be differents.",

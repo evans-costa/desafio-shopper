@@ -8,7 +8,7 @@ export const confirmRideRequestSchema = z
     distance: z.number().positive(),
     duration: z.string().min(1),
     driver: z.object({
-      id: z.number().positive(),
+      id: z.number().positive().min(1),
       name: z.string().min(1),
     }),
     value: z.number().positive(),

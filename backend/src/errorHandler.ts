@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { NotAcceptable, NotFound } from "./_errors";
+import { BadRequest, NotAcceptable, NotFound } from "./_errors";
 import { hasZodFastifySchemaValidationErrors } from "fastify-type-provider-zod";
 
 type FastifyErrorHandler = FastifyInstance["errorHandler"];
@@ -11,6 +11,13 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
       error_code: "INVALID_DATA",
       error_description:
         "Os dados fornecidos no corpo da requisição são inválidos",
+    });
+  }
+
+  if (error instanceof BadRequest) {
+    return reply.status(error.statusCode).send({
+      error_code: error.error_code,
+      error_description: error.error_description,
     });
   }
 

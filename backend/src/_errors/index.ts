@@ -15,6 +15,12 @@ class BaseError extends Error {
   }
 }
 
+export class BadRequest extends BaseError {
+  constructor(error_code: string, error_description: string) {
+    super(error_code, error_description, 400);
+  }
+}
+
 export class NotFound extends BaseError {
   constructor(error_code: string, error_description: string) {
     super(error_code, error_description, 404);

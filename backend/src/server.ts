@@ -15,7 +15,7 @@ server.register(ridesRoutes);
 
 server.setErrorHandler(errorHandler);
 
-server.listen({ port: 8080 }, (err, address) => {
+server.listen({ port: 8080, host: "0.0.0.0" }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);

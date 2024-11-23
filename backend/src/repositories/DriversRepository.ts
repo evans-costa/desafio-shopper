@@ -35,4 +35,20 @@ export class DriversRepository {
 
     return result;
   }
+
+  async getDriverById(id: number) {
+    const query = {
+      text: `SELECT *
+      FROM
+        drivers
+      WHERE 
+        driver_id = $1;
+      `,
+      values: [id],
+    };
+
+    const result = await database.query(query);
+
+    return result;
+  }
 }

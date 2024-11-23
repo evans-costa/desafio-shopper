@@ -1,4 +1,4 @@
-import { NotAcceptable, NotFound } from "../_errors";
+import { BadRequest, NotAcceptable, NotFound } from "../_errors";
 import { fetchDirections } from "../lib/fetchGoogleMaps";
 import { DriversRepository } from "../repositories/DriversRepository";
 import { RidesRepository } from "../repositories/RidesRepository";
@@ -63,8 +63,6 @@ export class RidesService {
       throw new NotFound("DRIVER_NOT_FOUND", "Motorista não encontrado");
     }
 
-    console.log(findAvaiableDriver.rows);
-
     if (findAvaiableDriver.rows[0].min_distance > distance) {
       throw new NotAcceptable(
         "INVALID_DISTANCE",
@@ -81,5 +79,37 @@ export class RidesService {
       duration,
       value,
     );
+  }
+
+  async listRides(customer_id: string, driver_id?: number) {
+    if (driver_id) {
+      const findDriver = await this.driversRepository.getDriverById(driver_id);
+
+      if (findDriver.rowCount === 0) {
+        throw new BadRequest("INVALID_DRIVER", "Motorista inválido");
+      }
+    }
+
+    const rides = await this.ridesRepository.getRidesByCustomerAndDriver(
+      customer_id,
+      driver_id,
+    );
+
+    if (rides.length === 0) {
+      throw new NotFound("NO_RIDES_FOUND", "Nenhum registro encontrado");
+    }
+
+    return rides.map((ride) => ({
+      id: ride.ride_id,
+      date: ride.created_at,
+      origin: ride.origin,
+      destination: ride.destination,
+      duration: ride.duration,
+      driver: {
+        id: ride.driver_id,
+        name: ride.name,
+      },
+      value: +parseFloat(ride.total_price).toFixed(2),
+    }));
   }
 }

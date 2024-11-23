@@ -27,4 +27,26 @@ export class RidesRepository {
 
     return result.rows[0];
   }
+
+  async getRidesByCustomerAndDriver(
+    customer_id: string,
+    driver_id?: number | null,
+  ) {
+    const query = {
+      text: `SELECT * FROM rides r 
+        INNER JOIN 
+          customers c ON r.customer_id = c.customer_id
+        INNER JOIN 
+          drivers d ON r.driver_id = d.driver_id
+        WHERE 
+          c.customer_id = $1
+          AND ($2::INT IS NULL OR d.driver_id = $2);
+      `,
+      values: [customer_id, driver_id || null],
+    };
+
+    const result = await database.query(query);
+
+    return result.rows;
+  }
 }

@@ -66,4 +66,22 @@ export class RidesController {
       success: true,
     });
   }
+
+  async listRides(
+    request: FastifyRequest<{
+      Params: { customer_id: string };
+      Querystring: { driver_id: number };
+    }>,
+    reply: FastifyReply,
+  ) {
+    const { customer_id } = request.params;
+    const { driver_id } = request.query;
+
+    const rides = await this.ridesService.listRides(customer_id, driver_id);
+
+    return reply.status(200).send({
+      customer_id,
+      rides,
+    });
+  }
 }

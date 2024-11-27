@@ -26,11 +26,13 @@ export class RidesService {
     const startLocation = directions.routes[0].legs[0].start_location;
     const endLocation = directions.routes[0].legs[0].end_location;
     const duration = directions.routes[0].legs[0].duration?.text as string;
-    const distance = parseFloat(
+    const distanceText = parseFloat(
       metersToKm(directions.routes[0].legs[0].distance?.text as string),
     ); // get numeric value
 
-    const drivers = await this.driversRepository.getDriversByDistance(distance);
+    const distanceValue = directions.routes[0].legs[0].distance?.value;
+    const drivers =
+      await this.driversRepository.getDriversByDistance(distanceText);
 
     return {
       drivers: drivers.map((driver) => ({
@@ -48,7 +50,7 @@ export class RidesService {
         startLocation,
         endLocation,
         duration,
-        distance,
+        distance: distanceValue,
       },
       directions,
     };
@@ -112,6 +114,7 @@ export class RidesService {
       date: ride.created_at,
       origin: ride.origin,
       destination: ride.destination,
+      distance: +parseFloat(ride.distance),
       duration: ride.duration,
       driver: {
         id: ride.driver_id,

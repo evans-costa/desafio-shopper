@@ -9,6 +9,7 @@ export const listRidesResponseSchema = {
         date: z.date(),
         origin: z.string(),
         destination: z.string(),
+        distance: z.number(),
         duration: z.string(),
         driver: z.object({
           id: z.number(),

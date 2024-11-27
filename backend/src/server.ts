@@ -4,9 +4,13 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from "fastify-type-provider-zod";
+import fastifyCors from "@fastify/cors";
 import { errorHandler } from "./errorHandler";
 
 export const server = fastify();
+server.register(fastifyCors, {
+  origin: "*",
+});
 
 server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);

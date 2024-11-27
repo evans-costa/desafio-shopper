@@ -20,6 +20,20 @@ services:
       db:
         condition: service_healthy
 
+  frontend:
+    container_name: react
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    env_file: "./.env"
+    ports:
+      - "80:80"
+    depends_on:
+      backend: 
+        condition: service_started
+
   db:
     container_name: database
     image: "postgres:16-alpine"
